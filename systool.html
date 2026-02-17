@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>🌐 SysAdmin Mini Tool</title>
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #1e1e2e;
+    color: white;
+    overflow-y: scroll;
+}
+h1 {
+    text-align: center;
+    font-size: 44px;
+    color: #00ffd5;
+    margin: 20px 0;
+    text-shadow: 2px 2px 8px black;
+}
+
+/* Контейнер для панелей */
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    padding: 20px;
+}
+
+/* Панели */
+.panel {
+    background: #2a2a3a;
+    border-radius: 18px;
+    padding: 25px;
+    width: 340px;
+    min-height: 270px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    font-size: 18px;
+    box-shadow: 0 0 15px #00000088;
+}
+
+label { font-size: 16px; margin-top: 5px; }
+input, select, button { margin: 10px 0; padding: 12px; font-size: 16px; border-radius: 8px; border: none; width: 100%; box-sizing: border-box;}
+button { cursor: pointer; background: #00ffd5; color: #1e1e2e; font-weight: bold; transition: 0.2s; }
+button:hover { background: #00bbaa; }
+p { margin: 8px 0; font-size: 16px; font-weight: bold; }
+
+/* Информационный блок */
+.info-box {
+    background: #2a2a3a;
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin: 20px auto 40px auto;
+    max-width: 700px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #cccccc;
+    text-align: center;
+    box-shadow: 0 0 10px #00000066;
+}
+.info-box p { margin: 5px 0; }
+</style>
+</head>
+<body>
+
+<h1>🌐 SysAdmin Mini Tool</h1>
+
+<div class="container">
+
+<!-- Конвертер размеров -->
+<div class="panel">
+<h2>📏 Конвертер размеров</h2>
+<label>Введите количество:</label>
+<input type="number" id="sizeValue" placeholder="Например: 1024">
+
+<label>Выберите исходную единицу:</label>
+<select id="sizeFrom">
+<option value="bit">Биты (bit)</option>
+<option value="B">Байты (B)</option>
+<option value="KB">Килобайты (KB)</option>
+<option value="MB">Мегабайты (MB)</option>
+<option value="GB">Гигабайты (GB)</option>
+<option value="TB">Терабайты (TB)</option>
+</select>
+
+<label>Перевести в:</label>
+<select id="sizeTo">
+<option value="bit">Биты (bit)</option>
+<option value="B">Байты (B)</option>
+<option value="KB">Килобайты (KB)</option>
+<option value="MB">Мегабайты (MB)</option>
+<option value="GB">Гигабайты (GB)</option>
+<option value="TB">Терабайты (TB)</option>
+</select>
+
+<button onclick="convertSize()">Конвертировать</button>
+<p id="sizeResult"></p>
+</div>
+
+<!-- Скорость интернета -->
+<div class="panel">
+<h2>⚡ Скорость интернета (30 сек)</h2>
+<p>Скорость измеряется автоматически каждые 2 секунды в течение 30 секунд</p>
+<button onclick="startSpeedTest()">Начать</button>
+<p id="speedResult"></p>
+</div>
+
+<!-- Конвертер систем счисления -->
+<div class="panel">
+<h2>🔢 Конвертер систем счисления</h2>
+<label>Введите число, которое хотите преобразовать:</label>
+<input type="number" id="numberValue" placeholder="Например: 255">
+<label>В какую систему перевести:</label>
+<select id="numberBase">
+<option value="2">2 (двоичная)</option>
+<option value="8">8 (восьмеричная)</option>
+<option value="10">10 (десятичная)</option>
+<option value="16">16 (шестнадцатеричная)</option>
+</select>
+<button onclick="convertNumber()">Конвертировать</button>
+<p id="numberResult"></p>
+</div>
+
+<!-- Генератор пароля -->
+<div class="panel">
+<h2>🔑 Генератор пароля</h2>
+<label>Введите количество символов для генерации пароля:</label>
+<input type="number" id="passLength" value="12" min="4" max="64">
+<button onclick="generatePassword()">Сгенерировать</button>
+<p id="passwordResult"></p>
+</div>
+
+</div>
+
+<!-- Информационный блок -->
+<div class="info-box">
+  <p><strong>Майкопский государственный гуманитарно-технический колледж</strong></p>
+  <p>Федерального государственного бюджетного образовательного учреждения высшего образования</p>
+  <p><strong>«Адыгейский государственный университет»</strong></p>
+  <p><em>Индивидуальный проект на тему: "Кроссплатформенное приложение"</em></p>
+  <p>Выполнили: Амброзиус Т. и Отришко С.</p>
+</div>
+
+<script>
+// Конвертер размеров
+function convertSize() {
+    let value = parseFloat(document.getElementById("sizeValue").value);
+    let from = document.getElementById("sizeFrom").value;
+    let to = document.getElementById("sizeTo").value;
+
+    const unitsInBits = {
+        "bit": 1,
+        "B": 8,
+        "KB": 8 * 1024,
+        "MB": 8 * 1024 * 1024,
+        "GB": 8 * 1024 * 1024 * 1024,
+        "TB": 8 * 1024 * 1024 * 1024 * 1024
+    };
+
+    let valueInBits = value * unitsInBits[from];
+    let result = valueInBits / unitsInBits[to];
+
+    document.getElementById("sizeResult").innerText = `Результат: ${result.toFixed(6)} ${to}`;
+}
+
+// Скорость интернета в Mbps
+function startSpeedTest() {
+    let result = document.getElementById("speedResult");
+    result.innerText = "";
+    let count = 0;
+    let interval = setInterval(() => {
+        let start = new Date().getTime();
+        fetch("https://jsonplaceholder.typicode.com/posts")
+        .then(() => {
+            let end = new Date().getTime();
+            let duration = (end-start)/1000;
+            let speedMbps = (1/duration).toFixed(2);
+            result.innerText = `Скорость ≈ ${speedMbps} Mbps`;
+        });
+        count += 2;
+        if(count >= 30) clearInterval(interval);
+    }, 2000);
+}
+
+// Конвертер систем счисления
+function convertNumber() {
+    let value = parseInt(document.getElementById("numberValue").value);
+    let base = parseInt(document.getElementById("numberBase").value);
+    document.getElementById("numberResult").innerText = "Результат: " + value.toString(base);
+}
+
+// Генератор пароля
+function generatePassword() {
+    let length = parseInt(document.getElementById("passLength").value);
+    let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+    let pass = "";
+    for(let i=0;i<length;i++){ pass += chars.charAt(Math.floor(Math.random()*chars.length)); }
+    document.getElementById("passwordResult").innerText = pass;
+}
+</script>
+
+</body>
+</html>
